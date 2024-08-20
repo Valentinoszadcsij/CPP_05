@@ -1,65 +1,75 @@
 #include <unistd.h> //for sleep
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 int main()
 {
+
     try
     {
         Bureaucrat bob("Bob", 50);
-        std::cout << "Created bureaucrat " << bob.getName() << " with grade " << bob.getGrade() << std::endl;
-
-        bob.increaseGrade();
-        std::cout << bob.getName() << "'s grade after increment: " << bob.getGrade() << std::endl;
-
-        bob.decreaseGrade();
-        std::cout << bob.getName() << "'s grade after decrement: " << bob.getGrade() << std::endl;
-        std::cout << bob;
         usleep(50000);
-        
-        //Test invalid grade (too high)
+
+        //Test form with proper grades
         try
         {
-            Bureaucrat alice("Alice", 0);
+            Form form404("Form 404", 40, 40);
+            std::cout << form404;
+            
+            //Test signing form
+            try
+            {
+                bob.signForm(form404);
+            }
+            catch(const Bureaucrat::GradeTooLowException &e)
+            {
+                std::cerr << e.what() << '\n';
+            }
+            try
+            {
+                bob.increaseGrade(10);
+                bob.signForm(form404);
+            }
+            catch(const Form::GradeTooLowException &e)
+            {
+                std::cerr << e.what() << '\n';
+            }
+            
         }
-        catch (const Bureaucrat::GradeTooHighException &e)
+        catch (const Form::GradeTooHighException &e)
         {
-            std::cerr << "Error creating Alice: " << e.what() << std::endl;
+            std::cerr << "Error creating form: " << e.what() << std::endl;
+        }
+        catch (const Form::GradeTooLowException &e)
+        {
+            std::cerr << "Error creating form: " << e.what() << std::endl;
         }
         usleep(50000);
 
         //Test invalid grade (too low)
         try
         {
-            Bureaucrat charlie("Charlie", 151);
+            Form Form303("Form 303", 151, 100);
         }
         catch (const Bureaucrat::GradeTooLowException &e)
         {
-            std::cerr << "Error creating Charlie: " << e.what() << std::endl;
+            std::cerr << "Error creating form: " << e.what() << std::endl;
         }
         usleep(50000);
 
-        // Test incrementing too high
+        //Test invalid grade (too high)
         try
         {
-            Bureaucrat dave("Dave", 1);
-            dave.increaseGrade();
+            Form Form202("Form 202", 0, 100);
         }
         catch (const Bureaucrat::GradeTooHighException &e)
         {
-            std::cerr << "Error incrementing Dave's grade: " << e.what() << std::endl;
+            std::cerr << "Error creating form: " << e.what() << std::endl;
         }
         usleep(50000);
+
         
-        // Test decrementing too low
-        try
-        {
-            Bureaucrat eve("Eve", 150);
-            eve.decreaseGrade();
-        }
-        catch (const Bureaucrat::GradeTooLowException &e)
-        {
-            std::cerr << "Error decrementing Eve's grade: " << e.what() << std::endl;
-        }
+        
     }
     catch (const std::exception &e)
     {
