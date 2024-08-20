@@ -19,7 +19,7 @@ public:
     Form(const std::string &name, const int required_to_sign, const int required_to_execute);
     Form(const Form &copy);
     Form& operator=(const Form &copy);
-    ~Form();
+    virtual ~Form();
 
     //getters
     std::string getName() const;
@@ -28,7 +28,8 @@ public:
     int         getGradeToExecute() const;
 	
 	//member functions
-	void	beSigned(const Bureaucrat &bureaucrat);
+	void	        beSigned(const Bureaucrat &bureaucrat);
+    virtual void    execute(const Bureaucrat &bureaucrat) const = 0;
 
     //exceptions
     class GradeTooHighException : public std::exception

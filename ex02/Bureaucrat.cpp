@@ -69,18 +69,18 @@ void Bureaucrat::signForm(Form &form)
 {
 	try
 	{
-		if (form.isSigned() == true)
-			throw Form::FormAlreadySignedException();
 		form.beSigned(*this);
-		if (form.isSigned() == true)
-			std::cerr << _name << " signed " << form.getName() << std::endl;
+		std::cerr << _name << " signed " << form.getName() << std::endl;
 	}
 	catch(const Form::GradeTooLowException &e)
 	{
 		std::cerr << _name << " couldn't sign " << form.getName() << " because: " <<  e.what() << std::endl;
 	}
+	catch(const Form::FormAlreadySignedException &e)
+	{
+		std::cerr << _name << " couldn't sign " << form.getName() << " because: " <<  e.what() << std::endl;
+	}
 }
-
 
 //exceptions
 const char* Bureaucrat::GradeTooHighException::what() const throw()

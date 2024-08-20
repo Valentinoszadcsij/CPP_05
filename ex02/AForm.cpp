@@ -1,4 +1,4 @@
-#include "Form.hpp"
+#include "AForm.hpp"
 
 //default constructor
 Form::Form()  : _name("Unknown"), _requiredToSign(150), _requiredToExecute(150), _is_signed(false)
